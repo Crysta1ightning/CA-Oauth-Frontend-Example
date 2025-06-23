@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { generatePayload } from '../utils/oauth/payload';
+import { STATENAME } from '../utils/oauth/const';
 
 export default function AuthCallback() {
   const navigate = useNavigate();
@@ -11,30 +13,32 @@ export default function AuthCallback() {
       const code = urlParams.get('code');
       const state = urlParams.get('state');
       console.log(code);
-      console.log(state)
+      console.log(state);
 
       if (!code || !state) {
-        console.error('缺少參數');
+        setStatus("缺少參數");
         // navigate('/?error=missing_parameters');
         return;
       }
 
-      const storedState = sessionStorage.getItem("oauth_okx_state");
+      const storedState = sessionStorage.getItem(STATENAME);
       console.log("storedState: ", storedState, "state: ", state);
       if (!storedState || state !== storedState) {
         setStatus("CSRF check failed");
-        sessionStorage.removeItem("oauth_okx_state"); // 清掉
+        sessionStorage.removeItem(STATENAME); // 清掉
         // navigate('/?error=csrf_failed');
         return;
       }
 
-      const query = new URLSearchParams({
-        code,
-        state,
-      }).toString();
-
+      const payload = generatePayload(urlParams);
       try {
-        const res = await fetch(`http://localhost:4000/auth/callback?${query}`);
+        const res = await fetch(`http://localhost:4000/auth/callback`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ code, payload }),
+        })
 
         const data = await res.json();
         console.log("data: ", data);
@@ -42,12 +46,12 @@ export default function AuthCallback() {
         if (res.ok) {
           console.log('登入成功', data);
           setStatus(JSON.stringify(data, null, 2));
-          sessionStorage.removeItem("oauth_okx_state");
+          sessionStorage.removeItem(STATENAME);
           // navigate('/arena');
         } else {
           console.error('登入失敗', data.error);
           setStatus(JSON.stringify(data, null, 2));
-          sessionStorage.removeItem("oauth_okx_state");
+          sessionStorage.removeItem(STATENAME);
           // navigate('/?error=' + encodeURIComponent(data.error));
         }
       } catch (err) {
