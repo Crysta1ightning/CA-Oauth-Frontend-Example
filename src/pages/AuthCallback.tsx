@@ -3,6 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { generatePayload } from '../utils/oauth/payload';
 import { STATENAME } from '../utils/oauth/const';
 
+function getCookieValue(name) {
+  const value = document.cookie
+    .split('; ')
+    .find(row => row.startsWith(name + '='))
+    ?.split('=')[1];
+  if (value == "undefined") return null;
+  return value;
+}
+
 export default function AuthCallback() {
   const navigate = useNavigate();
   const [status, setStatus] = useState("登入中...");
@@ -30,17 +39,29 @@ export default function AuthCallback() {
         return;
       }
 
+      const token = getCookieValue('auth_token');
+      console.log("Token:", token);
+      console.log(document.cookie);
+
+      const headers = {
+        "Content-Type": "application/json",
+        "X-staging-token": "dNqXFka25d4ZsK3",
+      };
+
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
       const payload = generatePayload(urlParams);
       try {
         const res = await fetch(`http://localhost:4000/auth/callback`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers,
           body: JSON.stringify({ code, payload }),
         })
 
         const data = await res.json();
+        document.cookie = `auth_token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
         console.log("data: ", data);
 
         if (res.ok) {

@@ -31,5 +31,6 @@ export const generateOkxPayload = (urlParams) => {
   return {
     provider: OKX_PROVIDERNAME,
     domain,
+    force: true,
   };
 }

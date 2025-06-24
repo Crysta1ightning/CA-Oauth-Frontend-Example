@@ -13,7 +13,7 @@ export const handleBybitLogin = () => {
     const query = new URLSearchParams({
         client_id: BYBIT_CLEINT_ID,
         response_type: "code",
-        scope: "restrict,openapi", // restrict, openapi, openapai-order, api-spot
+        scope: "restrict,restrict-email,openapi", // restrict, openapi, openapai-order, api-spot
         state: encodeURIComponent(state),
         redirect_uri: encodeURIComponent(REDIRECT_URI)
     });
@@ -25,5 +25,6 @@ export const handleBybitLogin = () => {
 export const generateBybitPayload = (urlParams) => {
   return {
     provider: BYBIT_PROVIDERNAME,
+    force: true
   };
 }
