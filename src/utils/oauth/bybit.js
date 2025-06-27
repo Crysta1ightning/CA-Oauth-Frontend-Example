@@ -22,9 +22,9 @@ export const handleBybitLogin = () => {
     window.location.href = authUrl;
 };
 
-export const generateBybitPayload = (urlParams) => {
+export const generateBybitPayload = (urlParams, force) => {
   return {
     provider: BYBIT_PROVIDERNAME,
-    force: true
+    force
   };
 }

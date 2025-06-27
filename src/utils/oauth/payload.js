@@ -7,7 +7,7 @@ const payloadHandlers = {
   bybit: generateBybitPayload
 };
 
-export const generatePayload = (urlParams) => {
+export const generatePayload = (urlParams, force) => {
   const state = urlParams.get("state");
   if (!state) throw new Error("Missing state");
 
@@ -23,5 +23,5 @@ export const generatePayload = (urlParams) => {
     throw new Error(`Unsupported or missing provider: ${provider}`);
   }
 
-  return payloadHandlers[provider](urlParams);
+  return payloadHandlers[provider](urlParams, force);
 }

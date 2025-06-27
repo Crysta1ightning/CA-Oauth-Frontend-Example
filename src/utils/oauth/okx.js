@@ -24,13 +24,13 @@ export const handleOkxLogin = (sdkReady) => {
   }
 };
 
-export const generateOkxPayload = (urlParams) => {
+export const generateOkxPayload = (urlParams, force) => {
   const domain = urlParams.get('domain');
   if (!domain) throw new Error('Missing domain param for OKX');
 
   return {
     provider: OKX_PROVIDERNAME,
     domain,
-    force: true,
+    force
   };
 }

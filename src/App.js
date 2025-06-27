@@ -23,7 +23,6 @@ function App() {
   return (
     <div style={{ padding: "2rem" }}>
       <h1>OAuth Login</h1>
-      <p>Click the button below to authorize with OKX:</p>
       <button onClick={() => {handleOkxLogin(sdkReady)}} disabled={!sdkReady}>
         Login with OKX
       </button>
