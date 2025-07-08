@@ -1,4 +1,4 @@
-import { BYBIT_CLEINT_ID, REDIRECT_URI, STATENAME, BYBIT_PROVIDERNAME } from "./const";
+import { BYBIT_CLEINT_ID, STATENAME, BYBIT_PROVIDERNAME } from "./const";
 export const handleBybitLogin = () => {
     // CSRF 保護
     const state = JSON.stringify({
@@ -15,16 +15,9 @@ export const handleBybitLogin = () => {
         response_type: "code",
         scope: "restrict,restrict-email,openapi", // restrict, openapi, openapai-order, api-spot
         state: encodeURIComponent(state),
-        redirect_uri: encodeURIComponent(REDIRECT_URI)
+        // redirect_uri: encodeURIComponent(REDIRECT_URI)
     });
     const authUrl = `${baseUrl}?${query.toString()}`;
 
     window.location.href = authUrl;
 };
-
-export const generateBybitPayload = (urlParams, force) => {
-  return {
-    provider: BYBIT_PROVIDERNAME,
-    force
-  };
-}

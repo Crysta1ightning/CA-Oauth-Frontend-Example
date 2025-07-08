@@ -23,14 +23,3 @@ export const handleOkxLogin = (sdkReady) => {
     console.error("SDK not ready");
   }
 };
-
-export const generateOkxPayload = (urlParams, force) => {
-  const domain = urlParams.get('domain');
-  if (!domain) throw new Error('Missing domain param for OKX');
-
-  return {
-    provider: OKX_PROVIDERNAME,
-    domain,
-    force
-  };
-}
