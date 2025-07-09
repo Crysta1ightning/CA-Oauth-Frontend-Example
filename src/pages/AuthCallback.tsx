@@ -132,8 +132,8 @@ export default function AuthCallback() {
         headers,
         body: JSON.stringify({
           query: `
-            mutation LoginOauthContinue($provider: String!, $oauthSessionId: String!, $force: Boolean, $username: String) {
-              loginOauthContinue(provider: $provider, oauthSessionId: $oauthSessionId, force: $force, username: $username) {
+            mutation LoginOauthContinue($provider: String!, $oauthSessionId: String!, $username: String) {
+              loginOauthContinue(provider: $provider, oauthSessionId: $oauthSessionId, username: $username) {
                 token
                 user {
                   id
@@ -152,7 +152,7 @@ export default function AuthCallback() {
       });
 
       const json = await res.json();
-      const data = json.data?.loginOauth;
+      const data = json.data?.loginOauthContinue;
 
       if (res.ok && !json.errors) {
         document.cookie = `auth_token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
